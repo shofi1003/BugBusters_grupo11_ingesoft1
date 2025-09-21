@@ -1,11 +1,17 @@
-# 🚀 Repositorio - Ingeniería de Software I
+# 🚀Challup - Ingeniería de Software I
 
 **Semestre:** 2025-2  
-**Universidad:** [Universidad Nacional de Colombia]
+**Universidad:** Universidad Nacional de Colombia
 
 ---
 
-## 📋 Descripción del Repositorio
+## 📋 Descripción 
+
+Challup busca ofrecer una aplicación moóvil que motive a los usuarios a cumplir retos diarios personalizados, orientados a sus hobbies, intereses y hábitos de vida. El sistema se diferencia de otros al incorporar:
+- Perfilación inteligente mediante cuestionario inicial y actualizaciones del usuario. Reto global semanal, definido por la comunidad de forma dinámica bajo revisión.
+- Generación de retos con IA ajustados al progreso y estilo de vida de cada persona.
+- Gamificación con rachas, puntos y rankings que refuerzan el compromiso.
+En síntesis, el sistema no es una red social en esta primera fase, sino una plataforma de retos diarios gamificada y personalizada que promueve hábitos y creatividad.
 
 Este repositorio centraliza todas las entregas y materiales del proyecto grupal para la asignatura de Ingeniería de Software I.
 
