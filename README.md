@@ -1,20 +1,4 @@
-<<<<<<< HEAD
-# chall_up
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
 =======
 # 🚀Challup - Ingeniería de Software I
 
@@ -41,4 +25,3 @@ Este repositorio centraliza todas las entregas y materiales del proyecto grupal 
 | 2 | CARLOS JAVIER CUERVO BARACALDO | `ccuervoba@unal.edu.co` |
 | 3 | ANA SOFIA RODRIGUEZ NEIRA | `arodriguezne@unal.edu.co` |
 | 4 | JULIANA PARRA CARO | `juparraca@unal.edu.co` |
->>>>>>> 95b2b81a498577a9898650a96217e9f7519b311f
