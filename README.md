@@ -1,5 +1,4 @@
 
-=======
 # 🚀Challup - Ingeniería de Software I
 
 **Semestre:** 2025-2  
