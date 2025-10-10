@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Miscellaneous
 *.class
 *.log
@@ -43,3 +44,21 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+=======
+# Archivos temporales 
+*.tmp 
+*.log 
+ECHO est  activado.
+# Dependencias de Node.js 
+node_modules/ 
+ECHO est  activado.
+# Entornos virtuales de Python 
+venv/ 
+ECHO est  activado.
+# Configuraci¢n de VSCode 
+.vscode/ 
+ECHO est  activado.
+# Archivos del sistema 
+.DS_Store 
+Thumbs.db 
+>>>>>>> 95b2b81a498577a9898650a96217e9f7519b311f
