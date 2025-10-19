@@ -1,49 +1,22 @@
 import 'package:flutter/material.dart';
-import 'database/database_helper.dart';
+import 'package:sqflite/sqflite.dart';
+import 'screens/login_screen.dart';
 
-void main() {
-  runApp(const ChallUpApp());
-}
-
-class ChallUpApp extends StatelessWidget {
-  const ChallUpApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Chall Up',
+      title: 'ChallUp',
       theme: ThemeData(primarySwatch: Colors.indigo),
-      debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
+      home: const LoginScreen(),
     );
   }
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MyApp());
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final dbHelper = DatabaseHelper();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Chall Up - Base Local')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            int id = await dbHelper.insertUsuario('Christian', 'test@challup.com');
-            debugPrint('Usuario insertado con ID: $id');
-            final usuarios = await dbHelper.getUsuarios();
-            debugPrint('Usuarios registrados: $usuarios');
-          },
-          child: const Text('Insertar usuario de prueba'),
-        ),
-      ),
-    );
-  }
-}
