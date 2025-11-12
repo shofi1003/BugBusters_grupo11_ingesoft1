@@ -10,18 +10,18 @@
 .svn/
 migrate_working_dir/
 
-# IntelliJ related
+# Esto es de IntelliJ IDEA
 *.iml
 *.ipr
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
+#La carpeta .vscode puede contener configuraciones de lanzamiento y tareas que se configuran en
+# VS Code y que puede que desees incluir en el control de versiones, por lo que esta línea
+# está comentada por defecto.
 #.vscode/
 
-# Flutter/Dart/Pub related
+# Esto es de Flutter/Dart/Pub 
 **/doc/api/
 **/ios/Flutter/flutter_assets/
 **/ios/Flutter/flutter_export_environment.sh
@@ -33,18 +33,18 @@ migrate_working_dir/
 .pub/
 /build/
 
-# Symbolication related
+# Simbolizacion de aplicaciones
 app.*.symbols
 
-# Obfuscation related
+# Mapas de aplicaciones
 app.*.map.json
 
-# Android Studio will place build artifacts here
+# Esto es de Android/Gradle
 /android/app/debug
 /android/app/profile
 /android/app/release
 
-# Build directories
+# Directorios de compilacion de android
 **/build/
 **/.gradle/
 chall_up/android/build/
