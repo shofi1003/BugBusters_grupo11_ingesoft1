@@ -48,3 +48,4 @@ app.*.map.json
 **/build/
 **/.gradle/
 chall_up/android/build/
+chall_up/devtools_options.yaml
