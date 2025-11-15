@@ -49,11 +49,9 @@
 )
 class AppDatabase extends _$AppDatabase {
 
-  // ---- SINGLETON ----
   AppDatabase._internal() : super(_openConnection());
   static final AppDatabase _instance = AppDatabase._internal();
   factory AppDatabase() => _instance;
-  // ---------------------
 
   @override
   int get schemaVersion => 1;

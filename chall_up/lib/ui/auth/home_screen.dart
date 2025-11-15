@@ -3,7 +3,7 @@ import '../../data/daos/usuario_dao.dart';
 import '../../data/database.dart';
 import 'lista_usuarios_screen.dart';
 import 'perfil_screen.dart';
-import 'cuestionario_inicial_screen.dart'; // ← IMPORTANTE
+import 'cuestionario_inicial_screen.dart'; 
 
 class HomeScreen extends StatelessWidget {
   final Usuario usuarioLogueado;

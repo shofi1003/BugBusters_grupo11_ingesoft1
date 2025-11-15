@@ -15,7 +15,7 @@ class GoogleSignInService {
 
   GoogleSignInService(this.usuarioDao);
 
-  /// Devuelve el usuario logueado actualmente (si hay)
+ 
   Usuario? get usuarioLogueado => _usuarioLogueado;
 
   Future<String> signIn() async {
@@ -27,11 +27,11 @@ class GoogleSignInService {
       final correo = account.email;
       final nombre = account.displayName ?? "Usuario Google";
 
-      // Buscar si ya existe en BD
+   
       Usuario? usuario = await usuarioDao.obtenerUsuarioPorGoogleId(googleId);
 
       if (usuario == null) {
-        // Si no existe, crear usuario nuevo
+
         final nuevoUsuario = UsuariosCompanion.insert(
           nombre: nombre,
           correo: correo,

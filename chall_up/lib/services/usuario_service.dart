@@ -9,14 +9,14 @@ class UsuarioService {
 
   UsuarioService(this.usuarioDao);
 
-  /// Registrar usuario normal
+
   Future<String> registrarUsuario({
     required String nombre,
     required String correo,
     required String password,
   }) async {
 
-    // Validaciones
+
     if (!Validators.isValidEmail(correo)) {
       return 'Correo inválido';
     }
@@ -43,7 +43,7 @@ class UsuarioService {
     return 'Usuario registrado exitosamente';
   }
 
-  /// Inicio de sesión
+
   Future<String> iniciarSesion(String correo, String password) async {
     final Usuario? usuario = await usuarioDao.obtenerUsuarioPorCorreo(correo);
     if (usuario == null) return 'Usuario no encontrado';
@@ -55,7 +55,7 @@ class UsuarioService {
         : 'Credenciales incorrectas';
   }
 
-  /// Registro con Google
+
   Future<String> registrarConGoogle(
       String nombre, String correo, String googleId) async {
 
@@ -79,7 +79,7 @@ class UsuarioService {
     return 'Usuario registrado con Google exitosamente';
   }
 
-  /// Actualizar solo nombre y teléfono
+
   Future<String> actualizarPerfil({
     required int usuarioId,
     required String nuevoNombre,
