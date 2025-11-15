@@ -10,9 +10,6 @@ class UsuarioDao extends DatabaseAccessor<AppDatabase>
       
   UsuarioDao(AppDatabase db) : super(db);
 
-  // =====================================================
-  // ================ MÉTODOS CRUD BÁSICOS ===============
-  // =====================================================
 
   Future<List<Usuario>> obtenerTodosUsuarios() {
     return select(usuarios).get();
@@ -44,13 +41,7 @@ class UsuarioDao extends DatabaseAccessor<AppDatabase>
         .getSingleOrNull();
   }
 
-  // =====================================================
-  // ============= ACTUALIZACIÓN PARCIAL =================
-  // =====================================================
-  //
-  // SOLO actualiza campos presentes (nombre, teléfono, password)
-  // NO toca valores null (Value.absent evita overwrite)
-  //
+
   Future<bool> actualizarUsuarioParcial({
   required int id,
   String? nombre,
@@ -63,11 +54,11 @@ class UsuarioDao extends DatabaseAccessor<AppDatabase>
     password: password != null ? Value(password) : const Value.absent(),
   );
 
-  // write() devuelve un int, así que lo convertimos a bool
+
   final filasActualizadas = await (update(usuarios)
         ..where((u) => u.id.equals(id)))
       .write(companion);
 
-  return filasActualizadas > 0; // <- ahora devuelve bool correctamente
+  return filasActualizadas > 0; 
 }
 }

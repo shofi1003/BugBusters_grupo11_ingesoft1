@@ -4,8 +4,8 @@ import '../../data/daos/usuario_dao.dart';
 import 'cuestionario_inicial_screen.dart';
 
 class PerfilScreen extends StatefulWidget {
-  final Usuario usuario;      // ← ahora recibe el usuario
-  final UsuarioDao usuarioDao; // ← ahora recibe el DAO ya inicializado
+  final Usuario usuario;    
+  final UsuarioDao usuarioDao; 
 
   const PerfilScreen({
     super.key,
@@ -26,7 +26,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
   void initState() {
     super.initState();
 
-    // Inicializar los controladores con los datos del usuario
+    
     nombreCtrl = TextEditingController(text: widget.usuario.nombre ?? "");
     telefonoCtrl = TextEditingController(text: widget.usuario.telefono ?? "");
     passwordCtrl = TextEditingController();
@@ -37,7 +37,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
     String telefono = telefonoCtrl.text.trim();
     String password = passwordCtrl.text.trim();
 
-    // Validación: teléfono solo números
+    
     if (telefono.isNotEmpty && !RegExp(r'^\d+$').hasMatch(telefono)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("El teléfono solo puede contener números")),

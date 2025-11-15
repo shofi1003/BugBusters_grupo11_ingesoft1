@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../data/database_provider.dart';   // << USAR ESTO
+import '../../data/database_provider.dart';   
 import '../../data/daos/usuario_dao.dart';
 import '../../services/usuario_service.dart';
 
@@ -24,7 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void initState() {
     super.initState();
 
-    // 🔥 USAR LA MISMA BASE DE DATOS GLOBAL PARA TODA LA APP
+   
     final db = DatabaseProvider.db;
     final usuarioDao = UsuarioDao(db);
 

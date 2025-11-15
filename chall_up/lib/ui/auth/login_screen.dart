@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
 
-    // 🔥 USAR SIEMPRE LA MISMA BASE DE DATOS
+
     final db = DatabaseProvider.db;
 
     usuarioDao = UsuarioDao(db);
@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     correoController.dispose();
     passwordController.dispose();
-    // 🔥 NO CERRAR LA BASE (DEBE SER GLOBAL)
+
     super.dispose();
   }
 
