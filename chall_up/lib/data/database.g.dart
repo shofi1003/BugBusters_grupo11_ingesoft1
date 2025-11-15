@@ -63,12 +63,12 @@ class $UsuariosTable extends Usuarios with TableInfo<$UsuariosTable, Usuario> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _contrasenaMeta = const VerificationMeta(
-    'contrasena',
+  static const VerificationMeta _passwordMeta = const VerificationMeta(
+    'password',
   );
   @override
-  late final GeneratedColumn<String> contrasena = GeneratedColumn<String>(
-    'contrasena',
+  late final GeneratedColumn<String> password = GeneratedColumn<String>(
+    'password',
     aliasedName,
     false,
     additionalChecks: GeneratedColumn.checkTextLength(
@@ -112,7 +112,7 @@ class $UsuariosTable extends Usuarios with TableInfo<$UsuariosTable, Usuario> {
     nombre,
     correo,
     telefono,
-    contrasena,
+    password,
     googleId,
     fechaRegistro,
   ];
@@ -153,13 +153,13 @@ class $UsuariosTable extends Usuarios with TableInfo<$UsuariosTable, Usuario> {
         telefono.isAcceptableOrUnknown(data['telefono']!, _telefonoMeta),
       );
     }
-    if (data.containsKey('contrasena')) {
+    if (data.containsKey('password')) {
       context.handle(
-        _contrasenaMeta,
-        contrasena.isAcceptableOrUnknown(data['contrasena']!, _contrasenaMeta),
+        _passwordMeta,
+        password.isAcceptableOrUnknown(data['password']!, _passwordMeta),
       );
     } else if (isInserting) {
-      context.missing(_contrasenaMeta);
+      context.missing(_passwordMeta);
     }
     if (data.containsKey('google_id')) {
       context.handle(
@@ -201,9 +201,9 @@ class $UsuariosTable extends Usuarios with TableInfo<$UsuariosTable, Usuario> {
         DriftSqlType.string,
         data['${effectivePrefix}telefono'],
       ),
-      contrasena: attachedDatabase.typeMapping.read(
+      password: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}contrasena'],
+        data['${effectivePrefix}password'],
       )!,
       googleId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -227,7 +227,7 @@ class Usuario extends DataClass implements Insertable<Usuario> {
   final String nombre;
   final String correo;
   final String? telefono;
-  final String contrasena;
+  final String password;
   final String? googleId;
   final DateTime fechaRegistro;
   const Usuario({
@@ -235,7 +235,7 @@ class Usuario extends DataClass implements Insertable<Usuario> {
     required this.nombre,
     required this.correo,
     this.telefono,
-    required this.contrasena,
+    required this.password,
     this.googleId,
     required this.fechaRegistro,
   });
@@ -248,7 +248,7 @@ class Usuario extends DataClass implements Insertable<Usuario> {
     if (!nullToAbsent || telefono != null) {
       map['telefono'] = Variable<String>(telefono);
     }
-    map['contrasena'] = Variable<String>(contrasena);
+    map['password'] = Variable<String>(password);
     if (!nullToAbsent || googleId != null) {
       map['google_id'] = Variable<String>(googleId);
     }
@@ -264,7 +264,7 @@ class Usuario extends DataClass implements Insertable<Usuario> {
       telefono: telefono == null && nullToAbsent
           ? const Value.absent()
           : Value(telefono),
-      contrasena: Value(contrasena),
+      password: Value(password),
       googleId: googleId == null && nullToAbsent
           ? const Value.absent()
           : Value(googleId),
@@ -282,7 +282,7 @@ class Usuario extends DataClass implements Insertable<Usuario> {
       nombre: serializer.fromJson<String>(json['nombre']),
       correo: serializer.fromJson<String>(json['correo']),
       telefono: serializer.fromJson<String?>(json['telefono']),
-      contrasena: serializer.fromJson<String>(json['contrasena']),
+      password: serializer.fromJson<String>(json['password']),
       googleId: serializer.fromJson<String?>(json['googleId']),
       fechaRegistro: serializer.fromJson<DateTime>(json['fechaRegistro']),
     );
@@ -295,7 +295,7 @@ class Usuario extends DataClass implements Insertable<Usuario> {
       'nombre': serializer.toJson<String>(nombre),
       'correo': serializer.toJson<String>(correo),
       'telefono': serializer.toJson<String?>(telefono),
-      'contrasena': serializer.toJson<String>(contrasena),
+      'password': serializer.toJson<String>(password),
       'googleId': serializer.toJson<String?>(googleId),
       'fechaRegistro': serializer.toJson<DateTime>(fechaRegistro),
     };
@@ -306,7 +306,7 @@ class Usuario extends DataClass implements Insertable<Usuario> {
     String? nombre,
     String? correo,
     Value<String?> telefono = const Value.absent(),
-    String? contrasena,
+    String? password,
     Value<String?> googleId = const Value.absent(),
     DateTime? fechaRegistro,
   }) => Usuario(
@@ -314,7 +314,7 @@ class Usuario extends DataClass implements Insertable<Usuario> {
     nombre: nombre ?? this.nombre,
     correo: correo ?? this.correo,
     telefono: telefono.present ? telefono.value : this.telefono,
-    contrasena: contrasena ?? this.contrasena,
+    password: password ?? this.password,
     googleId: googleId.present ? googleId.value : this.googleId,
     fechaRegistro: fechaRegistro ?? this.fechaRegistro,
   );
@@ -324,9 +324,7 @@ class Usuario extends DataClass implements Insertable<Usuario> {
       nombre: data.nombre.present ? data.nombre.value : this.nombre,
       correo: data.correo.present ? data.correo.value : this.correo,
       telefono: data.telefono.present ? data.telefono.value : this.telefono,
-      contrasena: data.contrasena.present
-          ? data.contrasena.value
-          : this.contrasena,
+      password: data.password.present ? data.password.value : this.password,
       googleId: data.googleId.present ? data.googleId.value : this.googleId,
       fechaRegistro: data.fechaRegistro.present
           ? data.fechaRegistro.value
@@ -341,7 +339,7 @@ class Usuario extends DataClass implements Insertable<Usuario> {
           ..write('nombre: $nombre, ')
           ..write('correo: $correo, ')
           ..write('telefono: $telefono, ')
-          ..write('contrasena: $contrasena, ')
+          ..write('password: $password, ')
           ..write('googleId: $googleId, ')
           ..write('fechaRegistro: $fechaRegistro')
           ..write(')'))
@@ -354,7 +352,7 @@ class Usuario extends DataClass implements Insertable<Usuario> {
     nombre,
     correo,
     telefono,
-    contrasena,
+    password,
     googleId,
     fechaRegistro,
   );
@@ -366,7 +364,7 @@ class Usuario extends DataClass implements Insertable<Usuario> {
           other.nombre == this.nombre &&
           other.correo == this.correo &&
           other.telefono == this.telefono &&
-          other.contrasena == this.contrasena &&
+          other.password == this.password &&
           other.googleId == this.googleId &&
           other.fechaRegistro == this.fechaRegistro);
 }
@@ -376,7 +374,7 @@ class UsuariosCompanion extends UpdateCompanion<Usuario> {
   final Value<String> nombre;
   final Value<String> correo;
   final Value<String?> telefono;
-  final Value<String> contrasena;
+  final Value<String> password;
   final Value<String?> googleId;
   final Value<DateTime> fechaRegistro;
   const UsuariosCompanion({
@@ -384,7 +382,7 @@ class UsuariosCompanion extends UpdateCompanion<Usuario> {
     this.nombre = const Value.absent(),
     this.correo = const Value.absent(),
     this.telefono = const Value.absent(),
-    this.contrasena = const Value.absent(),
+    this.password = const Value.absent(),
     this.googleId = const Value.absent(),
     this.fechaRegistro = const Value.absent(),
   });
@@ -393,18 +391,18 @@ class UsuariosCompanion extends UpdateCompanion<Usuario> {
     required String nombre,
     required String correo,
     this.telefono = const Value.absent(),
-    required String contrasena,
+    required String password,
     this.googleId = const Value.absent(),
     this.fechaRegistro = const Value.absent(),
   }) : nombre = Value(nombre),
        correo = Value(correo),
-       contrasena = Value(contrasena);
+       password = Value(password);
   static Insertable<Usuario> custom({
     Expression<int>? id,
     Expression<String>? nombre,
     Expression<String>? correo,
     Expression<String>? telefono,
-    Expression<String>? contrasena,
+    Expression<String>? password,
     Expression<String>? googleId,
     Expression<DateTime>? fechaRegistro,
   }) {
@@ -413,7 +411,7 @@ class UsuariosCompanion extends UpdateCompanion<Usuario> {
       if (nombre != null) 'nombre': nombre,
       if (correo != null) 'correo': correo,
       if (telefono != null) 'telefono': telefono,
-      if (contrasena != null) 'contrasena': contrasena,
+      if (password != null) 'password': password,
       if (googleId != null) 'google_id': googleId,
       if (fechaRegistro != null) 'fecha_registro': fechaRegistro,
     });
@@ -424,7 +422,7 @@ class UsuariosCompanion extends UpdateCompanion<Usuario> {
     Value<String>? nombre,
     Value<String>? correo,
     Value<String?>? telefono,
-    Value<String>? contrasena,
+    Value<String>? password,
     Value<String?>? googleId,
     Value<DateTime>? fechaRegistro,
   }) {
@@ -433,7 +431,7 @@ class UsuariosCompanion extends UpdateCompanion<Usuario> {
       nombre: nombre ?? this.nombre,
       correo: correo ?? this.correo,
       telefono: telefono ?? this.telefono,
-      contrasena: contrasena ?? this.contrasena,
+      password: password ?? this.password,
       googleId: googleId ?? this.googleId,
       fechaRegistro: fechaRegistro ?? this.fechaRegistro,
     );
@@ -454,8 +452,8 @@ class UsuariosCompanion extends UpdateCompanion<Usuario> {
     if (telefono.present) {
       map['telefono'] = Variable<String>(telefono.value);
     }
-    if (contrasena.present) {
-      map['contrasena'] = Variable<String>(contrasena.value);
+    if (password.present) {
+      map['password'] = Variable<String>(password.value);
     }
     if (googleId.present) {
       map['google_id'] = Variable<String>(googleId.value);
@@ -473,7 +471,7 @@ class UsuariosCompanion extends UpdateCompanion<Usuario> {
           ..write('nombre: $nombre, ')
           ..write('correo: $correo, ')
           ..write('telefono: $telefono, ')
-          ..write('contrasena: $contrasena, ')
+          ..write('password: $password, ')
           ..write('googleId: $googleId, ')
           ..write('fechaRegistro: $fechaRegistro')
           ..write(')'))
@@ -5594,6 +5592,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $PuntuacionsTable puntuacions = $PuntuacionsTable(this);
   late final $RankingsTable rankings = $RankingsTable(this);
   late final $NotificacionsTable notificacions = $NotificacionsTable(this);
+  late final UsuarioDao usuarioDao = UsuarioDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -5624,7 +5623,7 @@ typedef $$UsuariosTableCreateCompanionBuilder =
       required String nombre,
       required String correo,
       Value<String?> telefono,
-      required String contrasena,
+      required String password,
       Value<String?> googleId,
       Value<DateTime> fechaRegistro,
     });
@@ -5634,7 +5633,7 @@ typedef $$UsuariosTableUpdateCompanionBuilder =
       Value<String> nombre,
       Value<String> correo,
       Value<String?> telefono,
-      Value<String> contrasena,
+      Value<String> password,
       Value<String?> googleId,
       Value<DateTime> fechaRegistro,
     });
@@ -5906,8 +5905,8 @@ class $$UsuariosTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get contrasena => $composableBuilder(
-    column: $table.contrasena,
+  ColumnFilters<String> get password => $composableBuilder(
+    column: $table.password,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6252,8 +6251,8 @@ class $$UsuariosTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get contrasena => $composableBuilder(
-    column: $table.contrasena,
+  ColumnOrderings<String> get password => $composableBuilder(
+    column: $table.password,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -6289,10 +6288,8 @@ class $$UsuariosTableAnnotationComposer
   GeneratedColumn<String> get telefono =>
       $composableBuilder(column: $table.telefono, builder: (column) => column);
 
-  GeneratedColumn<String> get contrasena => $composableBuilder(
-    column: $table.contrasena,
-    builder: (column) => column,
-  );
+  GeneratedColumn<String> get password =>
+      $composableBuilder(column: $table.password, builder: (column) => column);
 
   GeneratedColumn<String> get googleId =>
       $composableBuilder(column: $table.googleId, builder: (column) => column);
@@ -6649,7 +6646,7 @@ class $$UsuariosTableTableManager
                 Value<String> nombre = const Value.absent(),
                 Value<String> correo = const Value.absent(),
                 Value<String?> telefono = const Value.absent(),
-                Value<String> contrasena = const Value.absent(),
+                Value<String> password = const Value.absent(),
                 Value<String?> googleId = const Value.absent(),
                 Value<DateTime> fechaRegistro = const Value.absent(),
               }) => UsuariosCompanion(
@@ -6657,7 +6654,7 @@ class $$UsuariosTableTableManager
                 nombre: nombre,
                 correo: correo,
                 telefono: telefono,
-                contrasena: contrasena,
+                password: password,
                 googleId: googleId,
                 fechaRegistro: fechaRegistro,
               ),
@@ -6667,7 +6664,7 @@ class $$UsuariosTableTableManager
                 required String nombre,
                 required String correo,
                 Value<String?> telefono = const Value.absent(),
-                required String contrasena,
+                required String password,
                 Value<String?> googleId = const Value.absent(),
                 Value<DateTime> fechaRegistro = const Value.absent(),
               }) => UsuariosCompanion.insert(
@@ -6675,7 +6672,7 @@ class $$UsuariosTableTableManager
                 nombre: nombre,
                 correo: correo,
                 telefono: telefono,
-                contrasena: contrasena,
+                password: password,
                 googleId: googleId,
                 fechaRegistro: fechaRegistro,
               ),
