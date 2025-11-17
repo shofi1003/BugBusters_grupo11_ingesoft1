@@ -53,6 +53,8 @@ class AppDatabase extends _$AppDatabase {
   static final AppDatabase _instance = AppDatabase._internal();
   factory AppDatabase() => _instance;
 
+  AppDatabase.forTest(QueryExecutor executor) : super(executor);
+  
   @override
   int get schemaVersion => 1;
 }
