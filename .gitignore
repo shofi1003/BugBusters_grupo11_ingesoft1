@@ -49,3 +49,9 @@ app.*.map.json
 **/.gradle/
 chall_up/android/build/
 chall_up/devtools_options.yaml
+
+# Archivos de documentación específicos a ignorar
+ANALISIS_COMPARATIVO_PROYECTO.md
+DOCUMENTACION_TESTS_FUNCIONALES.md
+Documentacion_Completa_Proyecto.md
+chall_up/README_NOTIFICACIONES.md
