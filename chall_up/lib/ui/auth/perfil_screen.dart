@@ -98,12 +98,18 @@ class _PerfilScreenState extends State<PerfilScreen> {
                 foregroundColor: Colors.white,
               ),
               onPressed: () {
+                // dentro de onPressed:
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CuestionarioInicialScreen(),
+                    builder: (_) => CuestionarioInicialScreen(
+                      usuario: widget.usuario,
+                      usuarioDao: widget.usuarioDao,
+                    ),
+
                   ),
                 );
+
               },
               child: const Text("Completar cuestionario inicial"),
             ),

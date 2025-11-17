@@ -53,9 +53,17 @@ class AppDatabase extends _$AppDatabase {
   static final AppDatabase _instance = AppDatabase._internal();
   factory AppDatabase() => _instance;
 
+  // Constructor para pruebas (BD en memoria)
+  factory AppDatabase.test() {
+    return AppDatabase._testInternal();
+  }
+
+  AppDatabase._testInternal() : super(NativeDatabase.memory());
+
   @override
   int get schemaVersion => 1;
 }
+
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {

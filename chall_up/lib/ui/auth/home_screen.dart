@@ -27,13 +27,14 @@ class HomeScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => PerfilScreen(
+                  builder: (_) => CuestionarioInicialScreen(
                     usuario: usuarioLogueado,
                     usuarioDao: usuarioDao,
                   ),
                 ),
               );
             },
+
           ),
         ],
       ),
@@ -65,7 +66,10 @@ class HomeScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const CuestionarioInicialScreen(),
+                    builder: (_) => CuestionarioInicialScreen(
+                      usuario: usuarioLogueado,
+                      usuarioDao: usuarioDao,
+                    ),
                   ),
                 );
               },
