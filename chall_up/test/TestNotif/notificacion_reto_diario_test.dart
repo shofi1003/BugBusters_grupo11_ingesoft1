@@ -140,3 +140,4 @@ void main() {
       expect(scheduledTime.minute, equals(0));
     });
   });
+}
