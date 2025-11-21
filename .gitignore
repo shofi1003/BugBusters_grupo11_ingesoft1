@@ -1,0 +1,57 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# Esto es de IntelliJ IDEA
+*.iml
+*.ipr
+*.iws
+.idea/
+
+#La carpeta .vscode puede contener configuraciones de lanzamiento y tareas que se configuran en
+# VS Code y que puede que desees incluir en el control de versiones, por lo que esta línea
+# está comentada por defecto.
+#.vscode/
+
+# Esto es de Flutter/Dart/Pub 
+**/doc/api/
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Simbolizacion de aplicaciones
+app.*.symbols
+
+# Mapas de aplicaciones
+app.*.map.json
+
+# Esto es de Android/Gradle
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Directorios de compilacion de android
+**/build/
+**/.gradle/
+chall_up/android/build/
+chall_up/devtools_options.yaml
+
+# Archivos de documentación específicos a ignorar
+ANALISIS_COMPARATIVO_PROYECTO.md
+DOCUMENTACION_TESTS_FUNCIONALES.md
+Documentacion_Completa_Proyecto.md
+chall_up/README_NOTIFICACIONES.md
