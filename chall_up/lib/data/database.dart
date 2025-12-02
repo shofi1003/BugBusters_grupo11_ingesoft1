@@ -3,6 +3,10 @@
   import 'package:drift/native.dart';
   import 'package:path_provider/path_provider.dart';
   import 'package:path/path.dart' as p;
+  import 'daos/evidencia_dao.dart';
+import 'daos/perfil_dao.dart';
+  import 'daos/cuestionario_dao.dart';
+  import 'daos/reto_dao.dart';
 
   import 'tables/usuario.dart';
   import 'tables/rol.dart';
@@ -46,8 +50,12 @@
   ],
   daos: [
     UsuarioDao,
-    StatsDao,
+    CuestionarioDao,
+    PerfilDao,
+    RetoDao,
+    EvidenciaDao,
   ],
+
 )
 class AppDatabase extends _$AppDatabase {
 
