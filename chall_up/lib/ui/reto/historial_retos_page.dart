@@ -127,7 +127,7 @@ class _HistorialRetosPageState extends State<HistorialRetosPage>
                           top: Radius.circular(20),
                         ),
                         child: Image.file(
-                          File(item.evidencia.imagenPath),
+                          File(item.evidencia.imagenPath ?? ''),
                           height: 200,
                           width: double.infinity,
                           fit: BoxFit.cover,

@@ -9,4 +9,5 @@ mixin _$EvidenciaDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.retoPredefinidos;
   $RetoDiariosTable get retoDiarios => attachedDatabase.retoDiarios;
   $EvidenciasTable get evidencias => attachedDatabase.evidencias;
+  $PuntuacionsTable get puntuacions => attachedDatabase.puntuacions;
 }

@@ -7,7 +7,8 @@ class Evidencias extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get usuarioId => integer().references(Usuarios, #id)();
   IntColumn get retoDiarioId => integer().references(RetoDiarios, #id)();
-  TextColumn get imagenPath => text()(); // Ruta de la imagen guardada
+  TextColumn get tipoEvidencia => text().withDefault(const Constant('foto'))();
+  TextColumn get imagenPath => text().nullable()();
+  TextColumn get contenidoTexto => text().nullable()();
   DateTimeColumn get fechaSubida => dateTime().withDefault(currentDateAndTime)();
 }
-

@@ -5,6 +5,8 @@ import '../../data/database_provider.dart';
 import '../../data/daos/usuario_dao.dart';
 import '../../data/daos/perfil_dao.dart';
 import '../../data/daos/stats_dao.dart';
+import '../../services/reto_service.dart';
+import '../../services/notification_service.dart';
 import '../reto/historial_retos_page.dart';
 import '../reto/reto_diario_page.dart';
 
@@ -12,6 +14,7 @@ import 'lista_usuarios_screen.dart';
 import 'perfil_screen.dart';
 import 'perfil_stats_screen.dart';
 import '../cuestionario/cuestionario_inicial_page.dart';
+
 
 class HomeScreen extends StatefulWidget {
   final Usuario usuarioLogueado;
@@ -46,7 +49,24 @@ class _HomeScreenState extends State<HomeScreen> {
       _tienePerfil = perfil != null;
       _cargandoPerfil = false;
     });
+
+    // Programar notificación diaria si tiene perfil
+    if (perfil != null && mounted) {
+      try {
+        final retoService = RetoService(DatabaseProvider.db);
+        final hobby = perfil.hobbies ?? 'general';
+        final retoText = await retoService.obtenerRetoDiario(widget.usuarioLogueado.id, hobby);
+        final notifService = NotificationService();
+        final status = await notifService.getNotificationScheduleStatus();
+        if (!(status['dailyChallengeScheduled'] as bool)) {
+          await notifService.scheduleDailyChallenge(retoText, widget.usuarioLogueado.id.toString());
+        }
+      } catch (e) {
+        debugPrint('Error scheduling daily challenge: $e');
+      }
+    }
   }
+
 
   Future<void> _abrirCuestionario() async {
     await Navigator.push(

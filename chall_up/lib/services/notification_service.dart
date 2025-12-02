@@ -23,7 +23,8 @@ class NotificationService {
 
   Future<void> initialize() async {
     tz_data.initializeTimeZones();
-    final androidInitializationSettings = AndroidInitializationSettings('@drawable/ic_launcher');
+    // CAMBIO: @drawable -> @mipmap
+    final androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     final darwinInitializationSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -121,7 +122,7 @@ class NotificationService {
           importance: Importance.high,
           priority: Priority.high,
           showWhen: false,
-          icon: '@drawable/ic_notification',
+          // CAMBIO: Eliminado el icon o cambiado a @mipmap
         ),
         iOS: DarwinNotificationDetails(
           presentAlert: true,
@@ -175,5 +176,55 @@ class NotificationService {
       'scheduledNotificationsCount': pendingNotifications.length,
       'dailyChallengeScheduled': isScheduled,
     };
+  }
+
+  static const int _reminderNotificationId = 1002;
+  static const String _reminderChannelId = 'reminder_channel';
+  static const String _reminderChannelName = 'Recordatorio Reto Diario';
+  static const String _reminderChannelDescription = 'Recordatorios para completar retos diarios';
+
+  Future<void> scheduleReminder6PM(String challengeText, String userId) async {
+    final notificationsEnabled = await _sessionService.areNotificationsEnabled();
+    if (!notificationsEnabled) return;
+
+    final hasPermissions = await getNotificationStatus();
+    if (!hasPermissions) return;
+
+    final scheduledTime = _dateTimeService.getNextScheduledTime(18, 0);
+
+    final payload = {
+      'type': 'reminder',
+      'userId': userId,
+      'challengeText': challengeText,
+    }.toString();
+
+    await _notifications.zonedSchedule(
+      _reminderNotificationId,
+      '⏰ ¡Faltan 2 horas para el cierre del día!',
+      'Completa tu reto diario "$challengeText" para no perder progreso. 😎',
+      scheduledTime,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          _reminderChannelId,
+          _reminderChannelName,
+          channelDescription: _reminderChannelDescription,
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      payload: payload,
+    );
+  }
+
+  Future<void> cancelReminder() async {
+    await _notifications.cancel(_reminderNotificationId);
   }
 }

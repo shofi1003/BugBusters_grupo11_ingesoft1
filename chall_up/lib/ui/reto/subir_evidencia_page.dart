@@ -24,6 +24,8 @@ class _SubirEvidenciaPageState extends State<SubirEvidenciaPage>
     with SingleTickerProviderStateMixin {
   File? imagenSeleccionada;
   final picker = ImagePicker();
+  final textoController = TextEditingController();
+  bool checkValue = false;
 
   late AnimationController _animController;
 
@@ -39,6 +41,7 @@ class _SubirEvidenciaPageState extends State<SubirEvidenciaPage>
 
   @override
   void dispose() {
+    textoController.dispose();
     _animController.dispose();
     super.dispose();
   }
@@ -58,9 +61,13 @@ class _SubirEvidenciaPageState extends State<SubirEvidenciaPage>
   }
 
   Future<void> guardarEvidencia() async {
-    if (imagenSeleccionada == null) {
+    final hasFoto = imagenSeleccionada != null;
+    final hasTexto = textoController.text.trim().isNotEmpty;
+    final hasCheck = checkValue;
+
+    if (!hasFoto && !hasTexto && !hasCheck) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Selecciona o toma una imagen primero")),
+        const SnackBar(content: Text("Selecciona al menos un tipo de evidencia (foto, texto o check)") ),
       );
       return;
     }
@@ -68,28 +75,44 @@ class _SubirEvidenciaPageState extends State<SubirEvidenciaPage>
     final evidenciaDao = EvidenciaDao(AppDatabase());
     final retoDao = RetoDao(AppDatabase());
 
+    String tipo;
+    if (hasFoto) {
+      tipo = 'foto';
+    } else if (hasTexto) {
+      tipo = 'texto';
+    } else {
+      tipo = 'check';
+    }
+
     // 1️⃣ Guardar la evidencia
     await evidenciaDao.guardarEvidencia(
       usuarioId: widget.usuarioId,
       retoDiarioId: widget.reto.retoDiario.id,
-      imagenPath: imagenSeleccionada!.path,
+      tipoEvidencia: tipo,
+      imagenPath: hasFoto ? imagenSeleccionada!.path : null,
+      contenidoTexto: hasTexto ? textoController.text.trim() : null,
     );
 
     // 2️⃣ Marcar reto como COMPLETADO
     await retoDao.marcarRetoComoCompletado(widget.reto.retoDiario.id);
 
-    // 3️⃣ Mensaje
+    // 3️⃣ Mensaje con puntos
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("¡Evidencia guardada y reto completado! 🎯🔥"),
+      SnackBar(
+        content: Text("¡Evidencia guardada ($tipo)! Reto completado +${tipo == 'foto' ? 10 : tipo == 'texto' ? 7 : 5} puntos 🎯🔥"),
       ),
     );
 
-    // 4️⃣ Volver al Home pase lo que pase
-    Navigator.pop(context); // Sale de SubirEvidenciaPage
+    // 4️⃣ Volver
+    Navigator.pop(context);
     Navigator.pop(context);
   }
 
+  // ============ ELIMINA ESTAS LÍNEAS 108-109 ============
+  // }
+  // 
+  // 
+  // ======================================================
 
   @override
   Widget build(BuildContext context) {

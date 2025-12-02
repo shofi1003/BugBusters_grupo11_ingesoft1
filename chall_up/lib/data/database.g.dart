@@ -4083,6 +4083,18 @@ class $EvidenciasTable extends Evidencias
       'REFERENCES reto_diarios (id)',
     ),
   );
+  static const VerificationMeta _tipoEvidenciaMeta = const VerificationMeta(
+    'tipoEvidencia',
+  );
+  @override
+  late final GeneratedColumn<String> tipoEvidencia = GeneratedColumn<String>(
+    'tipo_evidencia',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('foto'),
+  );
   static const VerificationMeta _imagenPathMeta = const VerificationMeta(
     'imagenPath',
   );
@@ -4090,9 +4102,20 @@ class $EvidenciasTable extends Evidencias
   late final GeneratedColumn<String> imagenPath = GeneratedColumn<String>(
     'imagen_path',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contenidoTextoMeta = const VerificationMeta(
+    'contenidoTexto',
+  );
+  @override
+  late final GeneratedColumn<String> contenidoTexto = GeneratedColumn<String>(
+    'contenido_texto',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _fechaSubidaMeta = const VerificationMeta(
     'fechaSubida',
@@ -4111,7 +4134,9 @@ class $EvidenciasTable extends Evidencias
     id,
     usuarioId,
     retoDiarioId,
+    tipoEvidencia,
     imagenPath,
+    contenidoTexto,
     fechaSubida,
   ];
   @override
@@ -4148,13 +4173,29 @@ class $EvidenciasTable extends Evidencias
     } else if (isInserting) {
       context.missing(_retoDiarioIdMeta);
     }
+    if (data.containsKey('tipo_evidencia')) {
+      context.handle(
+        _tipoEvidenciaMeta,
+        tipoEvidencia.isAcceptableOrUnknown(
+          data['tipo_evidencia']!,
+          _tipoEvidenciaMeta,
+        ),
+      );
+    }
     if (data.containsKey('imagen_path')) {
       context.handle(
         _imagenPathMeta,
         imagenPath.isAcceptableOrUnknown(data['imagen_path']!, _imagenPathMeta),
       );
-    } else if (isInserting) {
-      context.missing(_imagenPathMeta);
+    }
+    if (data.containsKey('contenido_texto')) {
+      context.handle(
+        _contenidoTextoMeta,
+        contenidoTexto.isAcceptableOrUnknown(
+          data['contenido_texto']!,
+          _contenidoTextoMeta,
+        ),
+      );
     }
     if (data.containsKey('fecha_subida')) {
       context.handle(
@@ -4186,10 +4227,18 @@ class $EvidenciasTable extends Evidencias
         DriftSqlType.int,
         data['${effectivePrefix}reto_diario_id'],
       )!,
+      tipoEvidencia: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tipo_evidencia'],
+      )!,
       imagenPath: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}imagen_path'],
-      )!,
+      ),
+      contenidoTexto: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}contenido_texto'],
+      ),
       fechaSubida: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}fecha_subida'],
@@ -4207,13 +4256,17 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
   final int id;
   final int usuarioId;
   final int retoDiarioId;
-  final String imagenPath;
+  final String tipoEvidencia;
+  final String? imagenPath;
+  final String? contenidoTexto;
   final DateTime fechaSubida;
   const Evidencia({
     required this.id,
     required this.usuarioId,
     required this.retoDiarioId,
-    required this.imagenPath,
+    required this.tipoEvidencia,
+    this.imagenPath,
+    this.contenidoTexto,
     required this.fechaSubida,
   });
   @override
@@ -4222,7 +4275,13 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
     map['id'] = Variable<int>(id);
     map['usuario_id'] = Variable<int>(usuarioId);
     map['reto_diario_id'] = Variable<int>(retoDiarioId);
-    map['imagen_path'] = Variable<String>(imagenPath);
+    map['tipo_evidencia'] = Variable<String>(tipoEvidencia);
+    if (!nullToAbsent || imagenPath != null) {
+      map['imagen_path'] = Variable<String>(imagenPath);
+    }
+    if (!nullToAbsent || contenidoTexto != null) {
+      map['contenido_texto'] = Variable<String>(contenidoTexto);
+    }
     map['fecha_subida'] = Variable<DateTime>(fechaSubida);
     return map;
   }
@@ -4232,7 +4291,13 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
       id: Value(id),
       usuarioId: Value(usuarioId),
       retoDiarioId: Value(retoDiarioId),
-      imagenPath: Value(imagenPath),
+      tipoEvidencia: Value(tipoEvidencia),
+      imagenPath: imagenPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imagenPath),
+      contenidoTexto: contenidoTexto == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contenidoTexto),
       fechaSubida: Value(fechaSubida),
     );
   }
@@ -4246,7 +4311,9 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
       id: serializer.fromJson<int>(json['id']),
       usuarioId: serializer.fromJson<int>(json['usuarioId']),
       retoDiarioId: serializer.fromJson<int>(json['retoDiarioId']),
-      imagenPath: serializer.fromJson<String>(json['imagenPath']),
+      tipoEvidencia: serializer.fromJson<String>(json['tipoEvidencia']),
+      imagenPath: serializer.fromJson<String?>(json['imagenPath']),
+      contenidoTexto: serializer.fromJson<String?>(json['contenidoTexto']),
       fechaSubida: serializer.fromJson<DateTime>(json['fechaSubida']),
     );
   }
@@ -4257,7 +4324,9 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
       'id': serializer.toJson<int>(id),
       'usuarioId': serializer.toJson<int>(usuarioId),
       'retoDiarioId': serializer.toJson<int>(retoDiarioId),
-      'imagenPath': serializer.toJson<String>(imagenPath),
+      'tipoEvidencia': serializer.toJson<String>(tipoEvidencia),
+      'imagenPath': serializer.toJson<String?>(imagenPath),
+      'contenidoTexto': serializer.toJson<String?>(contenidoTexto),
       'fechaSubida': serializer.toJson<DateTime>(fechaSubida),
     };
   }
@@ -4266,13 +4335,19 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
     int? id,
     int? usuarioId,
     int? retoDiarioId,
-    String? imagenPath,
+    String? tipoEvidencia,
+    Value<String?> imagenPath = const Value.absent(),
+    Value<String?> contenidoTexto = const Value.absent(),
     DateTime? fechaSubida,
   }) => Evidencia(
     id: id ?? this.id,
     usuarioId: usuarioId ?? this.usuarioId,
     retoDiarioId: retoDiarioId ?? this.retoDiarioId,
-    imagenPath: imagenPath ?? this.imagenPath,
+    tipoEvidencia: tipoEvidencia ?? this.tipoEvidencia,
+    imagenPath: imagenPath.present ? imagenPath.value : this.imagenPath,
+    contenidoTexto: contenidoTexto.present
+        ? contenidoTexto.value
+        : this.contenidoTexto,
     fechaSubida: fechaSubida ?? this.fechaSubida,
   );
   Evidencia copyWithCompanion(EvidenciasCompanion data) {
@@ -4282,9 +4357,15 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
       retoDiarioId: data.retoDiarioId.present
           ? data.retoDiarioId.value
           : this.retoDiarioId,
+      tipoEvidencia: data.tipoEvidencia.present
+          ? data.tipoEvidencia.value
+          : this.tipoEvidencia,
       imagenPath: data.imagenPath.present
           ? data.imagenPath.value
           : this.imagenPath,
+      contenidoTexto: data.contenidoTexto.present
+          ? data.contenidoTexto.value
+          : this.contenidoTexto,
       fechaSubida: data.fechaSubida.present
           ? data.fechaSubida.value
           : this.fechaSubida,
@@ -4297,15 +4378,24 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
           ..write('id: $id, ')
           ..write('usuarioId: $usuarioId, ')
           ..write('retoDiarioId: $retoDiarioId, ')
+          ..write('tipoEvidencia: $tipoEvidencia, ')
           ..write('imagenPath: $imagenPath, ')
+          ..write('contenidoTexto: $contenidoTexto, ')
           ..write('fechaSubida: $fechaSubida')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, usuarioId, retoDiarioId, imagenPath, fechaSubida);
+  int get hashCode => Object.hash(
+    id,
+    usuarioId,
+    retoDiarioId,
+    tipoEvidencia,
+    imagenPath,
+    contenidoTexto,
+    fechaSubida,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4313,7 +4403,9 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
           other.id == this.id &&
           other.usuarioId == this.usuarioId &&
           other.retoDiarioId == this.retoDiarioId &&
+          other.tipoEvidencia == this.tipoEvidencia &&
           other.imagenPath == this.imagenPath &&
+          other.contenidoTexto == this.contenidoTexto &&
           other.fechaSubida == this.fechaSubida);
 }
 
@@ -4321,36 +4413,45 @@ class EvidenciasCompanion extends UpdateCompanion<Evidencia> {
   final Value<int> id;
   final Value<int> usuarioId;
   final Value<int> retoDiarioId;
-  final Value<String> imagenPath;
+  final Value<String> tipoEvidencia;
+  final Value<String?> imagenPath;
+  final Value<String?> contenidoTexto;
   final Value<DateTime> fechaSubida;
   const EvidenciasCompanion({
     this.id = const Value.absent(),
     this.usuarioId = const Value.absent(),
     this.retoDiarioId = const Value.absent(),
+    this.tipoEvidencia = const Value.absent(),
     this.imagenPath = const Value.absent(),
+    this.contenidoTexto = const Value.absent(),
     this.fechaSubida = const Value.absent(),
   });
   EvidenciasCompanion.insert({
     this.id = const Value.absent(),
     required int usuarioId,
     required int retoDiarioId,
-    required String imagenPath,
+    this.tipoEvidencia = const Value.absent(),
+    this.imagenPath = const Value.absent(),
+    this.contenidoTexto = const Value.absent(),
     this.fechaSubida = const Value.absent(),
   }) : usuarioId = Value(usuarioId),
-       retoDiarioId = Value(retoDiarioId),
-       imagenPath = Value(imagenPath);
+       retoDiarioId = Value(retoDiarioId);
   static Insertable<Evidencia> custom({
     Expression<int>? id,
     Expression<int>? usuarioId,
     Expression<int>? retoDiarioId,
+    Expression<String>? tipoEvidencia,
     Expression<String>? imagenPath,
+    Expression<String>? contenidoTexto,
     Expression<DateTime>? fechaSubida,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (usuarioId != null) 'usuario_id': usuarioId,
       if (retoDiarioId != null) 'reto_diario_id': retoDiarioId,
+      if (tipoEvidencia != null) 'tipo_evidencia': tipoEvidencia,
       if (imagenPath != null) 'imagen_path': imagenPath,
+      if (contenidoTexto != null) 'contenido_texto': contenidoTexto,
       if (fechaSubida != null) 'fecha_subida': fechaSubida,
     });
   }
@@ -4359,14 +4460,18 @@ class EvidenciasCompanion extends UpdateCompanion<Evidencia> {
     Value<int>? id,
     Value<int>? usuarioId,
     Value<int>? retoDiarioId,
-    Value<String>? imagenPath,
+    Value<String>? tipoEvidencia,
+    Value<String?>? imagenPath,
+    Value<String?>? contenidoTexto,
     Value<DateTime>? fechaSubida,
   }) {
     return EvidenciasCompanion(
       id: id ?? this.id,
       usuarioId: usuarioId ?? this.usuarioId,
       retoDiarioId: retoDiarioId ?? this.retoDiarioId,
+      tipoEvidencia: tipoEvidencia ?? this.tipoEvidencia,
       imagenPath: imagenPath ?? this.imagenPath,
+      contenidoTexto: contenidoTexto ?? this.contenidoTexto,
       fechaSubida: fechaSubida ?? this.fechaSubida,
     );
   }
@@ -4383,8 +4488,14 @@ class EvidenciasCompanion extends UpdateCompanion<Evidencia> {
     if (retoDiarioId.present) {
       map['reto_diario_id'] = Variable<int>(retoDiarioId.value);
     }
+    if (tipoEvidencia.present) {
+      map['tipo_evidencia'] = Variable<String>(tipoEvidencia.value);
+    }
     if (imagenPath.present) {
       map['imagen_path'] = Variable<String>(imagenPath.value);
+    }
+    if (contenidoTexto.present) {
+      map['contenido_texto'] = Variable<String>(contenidoTexto.value);
     }
     if (fechaSubida.present) {
       map['fecha_subida'] = Variable<DateTime>(fechaSubida.value);
@@ -4398,7 +4509,9 @@ class EvidenciasCompanion extends UpdateCompanion<Evidencia> {
           ..write('id: $id, ')
           ..write('usuarioId: $usuarioId, ')
           ..write('retoDiarioId: $retoDiarioId, ')
+          ..write('tipoEvidencia: $tipoEvidencia, ')
           ..write('imagenPath: $imagenPath, ')
+          ..write('contenidoTexto: $contenidoTexto, ')
           ..write('fechaSubida: $fechaSubida')
           ..write(')'))
         .toString();
@@ -10957,7 +11070,9 @@ typedef $$EvidenciasTableCreateCompanionBuilder =
       Value<int> id,
       required int usuarioId,
       required int retoDiarioId,
-      required String imagenPath,
+      Value<String> tipoEvidencia,
+      Value<String?> imagenPath,
+      Value<String?> contenidoTexto,
       Value<DateTime> fechaSubida,
     });
 typedef $$EvidenciasTableUpdateCompanionBuilder =
@@ -10965,7 +11080,9 @@ typedef $$EvidenciasTableUpdateCompanionBuilder =
       Value<int> id,
       Value<int> usuarioId,
       Value<int> retoDiarioId,
-      Value<String> imagenPath,
+      Value<String> tipoEvidencia,
+      Value<String?> imagenPath,
+      Value<String?> contenidoTexto,
       Value<DateTime> fechaSubida,
     });
 
@@ -11026,8 +11143,18 @@ class $$EvidenciasTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get tipoEvidencia => $composableBuilder(
+    column: $table.tipoEvidencia,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get imagenPath => $composableBuilder(
     column: $table.imagenPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contenidoTexto => $composableBuilder(
+    column: $table.contenidoTexto,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -11097,8 +11224,18 @@ class $$EvidenciasTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get tipoEvidencia => $composableBuilder(
+    column: $table.tipoEvidencia,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get imagenPath => $composableBuilder(
     column: $table.imagenPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contenidoTexto => $composableBuilder(
+    column: $table.contenidoTexto,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -11166,8 +11303,18 @@ class $$EvidenciasTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
+  GeneratedColumn<String> get tipoEvidencia => $composableBuilder(
+    column: $table.tipoEvidencia,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get imagenPath => $composableBuilder(
     column: $table.imagenPath,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get contenidoTexto => $composableBuilder(
+    column: $table.contenidoTexto,
     builder: (column) => column,
   );
 
@@ -11254,13 +11401,17 @@ class $$EvidenciasTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<int> usuarioId = const Value.absent(),
                 Value<int> retoDiarioId = const Value.absent(),
-                Value<String> imagenPath = const Value.absent(),
+                Value<String> tipoEvidencia = const Value.absent(),
+                Value<String?> imagenPath = const Value.absent(),
+                Value<String?> contenidoTexto = const Value.absent(),
                 Value<DateTime> fechaSubida = const Value.absent(),
               }) => EvidenciasCompanion(
                 id: id,
                 usuarioId: usuarioId,
                 retoDiarioId: retoDiarioId,
+                tipoEvidencia: tipoEvidencia,
                 imagenPath: imagenPath,
+                contenidoTexto: contenidoTexto,
                 fechaSubida: fechaSubida,
               ),
           createCompanionCallback:
@@ -11268,13 +11419,17 @@ class $$EvidenciasTableTableManager
                 Value<int> id = const Value.absent(),
                 required int usuarioId,
                 required int retoDiarioId,
-                required String imagenPath,
+                Value<String> tipoEvidencia = const Value.absent(),
+                Value<String?> imagenPath = const Value.absent(),
+                Value<String?> contenidoTexto = const Value.absent(),
                 Value<DateTime> fechaSubida = const Value.absent(),
               }) => EvidenciasCompanion.insert(
                 id: id,
                 usuarioId: usuarioId,
                 retoDiarioId: retoDiarioId,
+                tipoEvidencia: tipoEvidencia,
                 imagenPath: imagenPath,
+                contenidoTexto: contenidoTexto,
                 fechaSubida: fechaSubida,
               ),
           withReferenceMapper: (p0) => p0
