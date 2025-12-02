@@ -56,7 +56,7 @@ class _PerfilStatsScreenState extends State<PerfilStatsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // Allows gradient to show behind AppBar
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text(
           "Mi Progreso",
@@ -83,104 +83,113 @@ class _PerfilStatsScreenState extends State<PerfilStatsScreen> {
           )
         ],
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.deepPurple.shade900,
-              Colors.deepPurple.shade700,
-              Colors.deepPurple.shade400,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+      // USE STACK HERE TO FIX BACKGROUND
+      body: Stack(
+        children: [
+          // 1. FIXED BACKGROUND LAYER
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.deepPurple.shade900,
+                  Colors.deepPurple.shade700,
+                  Colors.deepPurple.shade400,
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: FutureBuilder<Map<String, dynamic>>(
-            future: _statsFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator(color: Colors.white));
-              }
 
-              final data = snapshot.data ?? {};
-              final bool esAdmin = data['esAdmin'] ?? false;
+          // 2. SCROLLABLE CONTENT LAYER
+          SafeArea(
+            child: FutureBuilder<Map<String, dynamic>>(
+              future: _statsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator(color: Colors.white));
+                }
 
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeader(widget.usuario.nombre ?? "Usuario"),
-                    const SizedBox(height: 24),
+                final data = snapshot.data ?? {};
+                final bool esAdmin = data['esAdmin'] ?? false;
 
-                    // Stats Grid
-                    _buildStatsGrid(data),
-                    const SizedBox(height: 20),
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ... (Rest of your widgets: Header, Grid, etc.) ...
+                      _buildHeader(widget.usuario.nombre ?? "Usuario"),
+                      const SizedBox(height: 24),
 
-                    // Weekly Progress Card
-                    _buildSectionContainer(
-                      child: _buildWeeklyProgress(data['progresoSemanal'] ?? 0.0),
-                    ),
-                    const SizedBox(height: 20),
+                      _buildStatsGrid(data),
+                      const SizedBox(height: 20),
 
-                    // Admin Panel (Conditional)
-                    if (esAdmin) ...[
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.red.shade50,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
+                      _buildSectionContainer(
+                        child: _buildWeeklyProgress(data['progresoSemanal'] ?? 0.0),
+                      ),
+                      const SizedBox(height: 20),
+
+                      if (esAdmin) ...[
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.red.shade50,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "🛡️ Panel Admin",
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
+                              ),
+                              const Divider(color: Colors.redAccent),
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: const Text("Total Usuarios Registrados"),
+                                trailing: Text(
+                                  "${data['totalUsuarios']}",
+                                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                        const SizedBox(height: 20),
+                      ],
+
+                      _buildSectionContainer(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              "🛡️ Panel Admin",
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
+                              "🏆 Top 5 Ranking",
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple),
                             ),
-                            const Divider(color: Colors.redAccent),
-                            ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: const Text("Total Usuarios Registrados"),
-                              trailing: Text(
-                                "${data['totalUsuarios']}",
-                                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                            const SizedBox(height: 10),
+                            _buildRankingList(data['topRanking'] ?? []),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      // Add extra space at bottom for scrolling comfort
+                      const SizedBox(height: 40),
                     ],
-
-                    // Top Ranking Card
-                    _buildSectionContainer(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "🏆 Top 5 Ranking",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple),
-                          ),
-                          const SizedBox(height: 10),
-                          _buildRankingList(data['topRanking'] ?? []),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
+                  ),
+                );
+              },
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

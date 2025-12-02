@@ -21,13 +21,20 @@ class _ListaUsuariosState extends State<ListaUsuarios> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text("Lista de Usuarios"),
+        title: const Text("Comunidad ChallUp", style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
-            icon: Image.asset('assets/user_logo.png'),
+            icon: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+              child: const Icon(Icons.person, color: Colors.deepPurple),
+            ),
             onPressed: () async {
-              // Ir al perfil
               await Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -37,47 +44,91 @@ class _ListaUsuariosState extends State<ListaUsuarios> {
                   ),
                 ),
               );
-
-              // Recargar pantalla al volver
               setState(() {});
             },
           ),
         ],
       ),
-      body: FutureBuilder<List<Usuario>>(
-        future: widget.usuarioDao.obtenerTodosUsuarios(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.deepPurple.shade900,
+              Colors.deepPurple.shade700,
+              Colors.deepPurple.shade500,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: FutureBuilder<List<Usuario>>(
+            future: widget.usuarioDao.obtenerTodosUsuarios(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator(color: Colors.white));
+              }
 
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("No hay usuarios registrados"));
-          }
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text("No hay usuarios registrados", style: TextStyle(color: Colors.white)));
+              }
 
-          final usuarios = snapshot.data!;
+              final usuarios = snapshot.data!;
 
-          return ListView.builder(
-            itemCount: usuarios.length,
-            itemBuilder: (context, index) {
-              final usuario = usuarios[index];
+              return ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: usuarios.length,
+                itemBuilder: (context, index) {
+                  final usuario = usuarios[index];
 
-              return ListTile(
-                leading: const Icon(Icons.person),
-                title: Text(usuario.nombre),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(usuario.correo),
-                    if (usuario.telefono != null &&
-                        usuario.telefono!.trim().isNotEmpty)
-                      Text("Teléfono: ${usuario.telefono!}"),
-                  ],
-                ),
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 4,
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(12),
+                      leading: CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.deepPurple.shade100,
+                        child: Text(
+                          usuario.nombre?[0].toUpperCase() ?? "U",
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                        ),
+                      ),
+                      title: Text(
+                        usuario.nombre ?? "Usuario",
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(Icons.email, size: 14, color: Colors.grey),
+                              const SizedBox(width: 4),
+                              Text(usuario.correo, style: const TextStyle(fontSize: 13)),
+                            ],
+                          ),
+                          if (usuario.telefono != null && usuario.telefono!.trim().isNotEmpty) ...[
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                const Icon(Icons.phone, size: 14, color: Colors.grey),
+                                const SizedBox(width: 4),
+                                Text(usuario.telefono!, style: const TextStyle(fontSize: 13)),
+                              ],
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  );
+                },
               );
             },
-          );
-        },
+          ),
+        ),
       ),
     );
   }
