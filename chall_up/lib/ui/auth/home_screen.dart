@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../data/daos/usuario_dao.dart';
+import '../../data/daos/stats_dao.dart'; // Import StatsDao
 import '../../data/database.dart';
+import '../../data/database_provider.dart'; // Import Provider
 import 'lista_usuarios_screen.dart';
-import 'perfil_screen.dart';
-import 'cuestionario_inicial_screen.dart'; 
+import 'perfil_stats_screen.dart'; // Import new screen
+import 'perfil_screen.dart'; // Import edit screen (for the icon)
+import 'cuestionario_inicial_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final Usuario usuarioLogueado;
@@ -24,6 +27,7 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: Image.asset('assets/user_logo.png', width: 26),
             onPressed: () {
+              // OPTION A: Go to Edit Profile (Old behavior)
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -41,6 +45,29 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // --- NEW BUTTON: View Stats/Profile ---
+            ElevatedButton.icon(
+              icon: const Icon(Icons.bar_chart),
+              label: const Text("Ver Mi Progreso"),
+              onPressed: () {
+                // Get DB instance from your existing Provider
+                final db = DatabaseProvider.db;
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => PerfilStatsScreen(
+                      usuario: usuarioLogueado,
+                      usuarioDao: usuarioDao,
+                      statsDao: StatsDao(db), // Inject StatsDao
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+
+            // Existing Buttons
             ElevatedButton(
               onPressed: () {
                 Navigator.push(

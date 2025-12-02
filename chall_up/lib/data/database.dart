@@ -21,6 +21,7 @@
   import 'tables/ranking.dart';
   import 'tables/notificacion.dart';
   import 'daos/usuario_dao.dart';
+  import 'daos/stats_dao.dart';
 
   part 'database.g.dart';
 
@@ -45,6 +46,7 @@
   ],
   daos: [
     UsuarioDao,
+    StatsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {

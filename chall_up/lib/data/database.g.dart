@@ -5593,6 +5593,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RankingsTable rankings = $RankingsTable(this);
   late final $NotificacionsTable notificacions = $NotificacionsTable(this);
   late final UsuarioDao usuarioDao = UsuarioDao(this as AppDatabase);
+  late final StatsDao statsDao = StatsDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
