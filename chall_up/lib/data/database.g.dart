@@ -4076,50 +4076,23 @@ class $EvidenciasTable extends Evidencias
   late final GeneratedColumn<int> retoDiarioId = GeneratedColumn<int>(
     'reto_diario_id',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.int,
-    requiredDuringInsert: false,
+    requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES reto_diarios (id)',
     ),
   );
-  static const VerificationMeta _retoGlobalIdMeta = const VerificationMeta(
-    'retoGlobalId',
+  static const VerificationMeta _imagenPathMeta = const VerificationMeta(
+    'imagenPath',
   );
   @override
-  late final GeneratedColumn<int> retoGlobalId = GeneratedColumn<int>(
-    'reto_global_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES reto_globals (id)',
-    ),
-  );
-  static const VerificationMeta _tipoMeta = const VerificationMeta('tipo');
-  @override
-  late final GeneratedColumn<String> tipo = GeneratedColumn<String>(
-    'tipo',
+  late final GeneratedColumn<String> imagenPath = GeneratedColumn<String>(
+    'imagen_path',
     aliasedName,
     false,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 20,
-    ),
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  );
-  static const VerificationMeta _contenidoMeta = const VerificationMeta(
-    'contenido',
-  );
-  @override
-  late final GeneratedColumn<String> contenido = GeneratedColumn<String>(
-    'contenido',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
   );
   static const VerificationMeta _fechaSubidaMeta = const VerificationMeta(
     'fechaSubida',
@@ -4138,9 +4111,7 @@ class $EvidenciasTable extends Evidencias
     id,
     usuarioId,
     retoDiarioId,
-    retoGlobalId,
-    tipo,
-    contenido,
+    imagenPath,
     fechaSubida,
   ];
   @override
@@ -4174,29 +4145,16 @@ class $EvidenciasTable extends Evidencias
           _retoDiarioIdMeta,
         ),
       );
+    } else if (isInserting) {
+      context.missing(_retoDiarioIdMeta);
     }
-    if (data.containsKey('reto_global_id')) {
+    if (data.containsKey('imagen_path')) {
       context.handle(
-        _retoGlobalIdMeta,
-        retoGlobalId.isAcceptableOrUnknown(
-          data['reto_global_id']!,
-          _retoGlobalIdMeta,
-        ),
-      );
-    }
-    if (data.containsKey('tipo')) {
-      context.handle(
-        _tipoMeta,
-        tipo.isAcceptableOrUnknown(data['tipo']!, _tipoMeta),
+        _imagenPathMeta,
+        imagenPath.isAcceptableOrUnknown(data['imagen_path']!, _imagenPathMeta),
       );
     } else if (isInserting) {
-      context.missing(_tipoMeta);
-    }
-    if (data.containsKey('contenido')) {
-      context.handle(
-        _contenidoMeta,
-        contenido.isAcceptableOrUnknown(data['contenido']!, _contenidoMeta),
-      );
+      context.missing(_imagenPathMeta);
     }
     if (data.containsKey('fecha_subida')) {
       context.handle(
@@ -4227,19 +4185,11 @@ class $EvidenciasTable extends Evidencias
       retoDiarioId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}reto_diario_id'],
-      ),
-      retoGlobalId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}reto_global_id'],
-      ),
-      tipo: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}tipo'],
       )!,
-      contenido: attachedDatabase.typeMapping.read(
+      imagenPath: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}contenido'],
-      ),
+        data['${effectivePrefix}imagen_path'],
+      )!,
       fechaSubida: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}fecha_subida'],
@@ -4256,18 +4206,14 @@ class $EvidenciasTable extends Evidencias
 class Evidencia extends DataClass implements Insertable<Evidencia> {
   final int id;
   final int usuarioId;
-  final int? retoDiarioId;
-  final int? retoGlobalId;
-  final String tipo;
-  final String? contenido;
+  final int retoDiarioId;
+  final String imagenPath;
   final DateTime fechaSubida;
   const Evidencia({
     required this.id,
     required this.usuarioId,
-    this.retoDiarioId,
-    this.retoGlobalId,
-    required this.tipo,
-    this.contenido,
+    required this.retoDiarioId,
+    required this.imagenPath,
     required this.fechaSubida,
   });
   @override
@@ -4275,16 +4221,8 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['usuario_id'] = Variable<int>(usuarioId);
-    if (!nullToAbsent || retoDiarioId != null) {
-      map['reto_diario_id'] = Variable<int>(retoDiarioId);
-    }
-    if (!nullToAbsent || retoGlobalId != null) {
-      map['reto_global_id'] = Variable<int>(retoGlobalId);
-    }
-    map['tipo'] = Variable<String>(tipo);
-    if (!nullToAbsent || contenido != null) {
-      map['contenido'] = Variable<String>(contenido);
-    }
+    map['reto_diario_id'] = Variable<int>(retoDiarioId);
+    map['imagen_path'] = Variable<String>(imagenPath);
     map['fecha_subida'] = Variable<DateTime>(fechaSubida);
     return map;
   }
@@ -4293,16 +4231,8 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
     return EvidenciasCompanion(
       id: Value(id),
       usuarioId: Value(usuarioId),
-      retoDiarioId: retoDiarioId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(retoDiarioId),
-      retoGlobalId: retoGlobalId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(retoGlobalId),
-      tipo: Value(tipo),
-      contenido: contenido == null && nullToAbsent
-          ? const Value.absent()
-          : Value(contenido),
+      retoDiarioId: Value(retoDiarioId),
+      imagenPath: Value(imagenPath),
       fechaSubida: Value(fechaSubida),
     );
   }
@@ -4315,10 +4245,8 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
     return Evidencia(
       id: serializer.fromJson<int>(json['id']),
       usuarioId: serializer.fromJson<int>(json['usuarioId']),
-      retoDiarioId: serializer.fromJson<int?>(json['retoDiarioId']),
-      retoGlobalId: serializer.fromJson<int?>(json['retoGlobalId']),
-      tipo: serializer.fromJson<String>(json['tipo']),
-      contenido: serializer.fromJson<String?>(json['contenido']),
+      retoDiarioId: serializer.fromJson<int>(json['retoDiarioId']),
+      imagenPath: serializer.fromJson<String>(json['imagenPath']),
       fechaSubida: serializer.fromJson<DateTime>(json['fechaSubida']),
     );
   }
@@ -4328,10 +4256,8 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'usuarioId': serializer.toJson<int>(usuarioId),
-      'retoDiarioId': serializer.toJson<int?>(retoDiarioId),
-      'retoGlobalId': serializer.toJson<int?>(retoGlobalId),
-      'tipo': serializer.toJson<String>(tipo),
-      'contenido': serializer.toJson<String?>(contenido),
+      'retoDiarioId': serializer.toJson<int>(retoDiarioId),
+      'imagenPath': serializer.toJson<String>(imagenPath),
       'fechaSubida': serializer.toJson<DateTime>(fechaSubida),
     };
   }
@@ -4339,18 +4265,14 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
   Evidencia copyWith({
     int? id,
     int? usuarioId,
-    Value<int?> retoDiarioId = const Value.absent(),
-    Value<int?> retoGlobalId = const Value.absent(),
-    String? tipo,
-    Value<String?> contenido = const Value.absent(),
+    int? retoDiarioId,
+    String? imagenPath,
     DateTime? fechaSubida,
   }) => Evidencia(
     id: id ?? this.id,
     usuarioId: usuarioId ?? this.usuarioId,
-    retoDiarioId: retoDiarioId.present ? retoDiarioId.value : this.retoDiarioId,
-    retoGlobalId: retoGlobalId.present ? retoGlobalId.value : this.retoGlobalId,
-    tipo: tipo ?? this.tipo,
-    contenido: contenido.present ? contenido.value : this.contenido,
+    retoDiarioId: retoDiarioId ?? this.retoDiarioId,
+    imagenPath: imagenPath ?? this.imagenPath,
     fechaSubida: fechaSubida ?? this.fechaSubida,
   );
   Evidencia copyWithCompanion(EvidenciasCompanion data) {
@@ -4360,11 +4282,9 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
       retoDiarioId: data.retoDiarioId.present
           ? data.retoDiarioId.value
           : this.retoDiarioId,
-      retoGlobalId: data.retoGlobalId.present
-          ? data.retoGlobalId.value
-          : this.retoGlobalId,
-      tipo: data.tipo.present ? data.tipo.value : this.tipo,
-      contenido: data.contenido.present ? data.contenido.value : this.contenido,
+      imagenPath: data.imagenPath.present
+          ? data.imagenPath.value
+          : this.imagenPath,
       fechaSubida: data.fechaSubida.present
           ? data.fechaSubida.value
           : this.fechaSubida,
@@ -4377,24 +4297,15 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
           ..write('id: $id, ')
           ..write('usuarioId: $usuarioId, ')
           ..write('retoDiarioId: $retoDiarioId, ')
-          ..write('retoGlobalId: $retoGlobalId, ')
-          ..write('tipo: $tipo, ')
-          ..write('contenido: $contenido, ')
+          ..write('imagenPath: $imagenPath, ')
           ..write('fechaSubida: $fechaSubida')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-    id,
-    usuarioId,
-    retoDiarioId,
-    retoGlobalId,
-    tipo,
-    contenido,
-    fechaSubida,
-  );
+  int get hashCode =>
+      Object.hash(id, usuarioId, retoDiarioId, imagenPath, fechaSubida);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4402,55 +4313,44 @@ class Evidencia extends DataClass implements Insertable<Evidencia> {
           other.id == this.id &&
           other.usuarioId == this.usuarioId &&
           other.retoDiarioId == this.retoDiarioId &&
-          other.retoGlobalId == this.retoGlobalId &&
-          other.tipo == this.tipo &&
-          other.contenido == this.contenido &&
+          other.imagenPath == this.imagenPath &&
           other.fechaSubida == this.fechaSubida);
 }
 
 class EvidenciasCompanion extends UpdateCompanion<Evidencia> {
   final Value<int> id;
   final Value<int> usuarioId;
-  final Value<int?> retoDiarioId;
-  final Value<int?> retoGlobalId;
-  final Value<String> tipo;
-  final Value<String?> contenido;
+  final Value<int> retoDiarioId;
+  final Value<String> imagenPath;
   final Value<DateTime> fechaSubida;
   const EvidenciasCompanion({
     this.id = const Value.absent(),
     this.usuarioId = const Value.absent(),
     this.retoDiarioId = const Value.absent(),
-    this.retoGlobalId = const Value.absent(),
-    this.tipo = const Value.absent(),
-    this.contenido = const Value.absent(),
+    this.imagenPath = const Value.absent(),
     this.fechaSubida = const Value.absent(),
   });
   EvidenciasCompanion.insert({
     this.id = const Value.absent(),
     required int usuarioId,
-    this.retoDiarioId = const Value.absent(),
-    this.retoGlobalId = const Value.absent(),
-    required String tipo,
-    this.contenido = const Value.absent(),
+    required int retoDiarioId,
+    required String imagenPath,
     this.fechaSubida = const Value.absent(),
   }) : usuarioId = Value(usuarioId),
-       tipo = Value(tipo);
+       retoDiarioId = Value(retoDiarioId),
+       imagenPath = Value(imagenPath);
   static Insertable<Evidencia> custom({
     Expression<int>? id,
     Expression<int>? usuarioId,
     Expression<int>? retoDiarioId,
-    Expression<int>? retoGlobalId,
-    Expression<String>? tipo,
-    Expression<String>? contenido,
+    Expression<String>? imagenPath,
     Expression<DateTime>? fechaSubida,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (usuarioId != null) 'usuario_id': usuarioId,
       if (retoDiarioId != null) 'reto_diario_id': retoDiarioId,
-      if (retoGlobalId != null) 'reto_global_id': retoGlobalId,
-      if (tipo != null) 'tipo': tipo,
-      if (contenido != null) 'contenido': contenido,
+      if (imagenPath != null) 'imagen_path': imagenPath,
       if (fechaSubida != null) 'fecha_subida': fechaSubida,
     });
   }
@@ -4458,19 +4358,15 @@ class EvidenciasCompanion extends UpdateCompanion<Evidencia> {
   EvidenciasCompanion copyWith({
     Value<int>? id,
     Value<int>? usuarioId,
-    Value<int?>? retoDiarioId,
-    Value<int?>? retoGlobalId,
-    Value<String>? tipo,
-    Value<String?>? contenido,
+    Value<int>? retoDiarioId,
+    Value<String>? imagenPath,
     Value<DateTime>? fechaSubida,
   }) {
     return EvidenciasCompanion(
       id: id ?? this.id,
       usuarioId: usuarioId ?? this.usuarioId,
       retoDiarioId: retoDiarioId ?? this.retoDiarioId,
-      retoGlobalId: retoGlobalId ?? this.retoGlobalId,
-      tipo: tipo ?? this.tipo,
-      contenido: contenido ?? this.contenido,
+      imagenPath: imagenPath ?? this.imagenPath,
       fechaSubida: fechaSubida ?? this.fechaSubida,
     );
   }
@@ -4487,14 +4383,8 @@ class EvidenciasCompanion extends UpdateCompanion<Evidencia> {
     if (retoDiarioId.present) {
       map['reto_diario_id'] = Variable<int>(retoDiarioId.value);
     }
-    if (retoGlobalId.present) {
-      map['reto_global_id'] = Variable<int>(retoGlobalId.value);
-    }
-    if (tipo.present) {
-      map['tipo'] = Variable<String>(tipo.value);
-    }
-    if (contenido.present) {
-      map['contenido'] = Variable<String>(contenido.value);
+    if (imagenPath.present) {
+      map['imagen_path'] = Variable<String>(imagenPath.value);
     }
     if (fechaSubida.present) {
       map['fecha_subida'] = Variable<DateTime>(fechaSubida.value);
@@ -4508,9 +4398,7 @@ class EvidenciasCompanion extends UpdateCompanion<Evidencia> {
           ..write('id: $id, ')
           ..write('usuarioId: $usuarioId, ')
           ..write('retoDiarioId: $retoDiarioId, ')
-          ..write('retoGlobalId: $retoGlobalId, ')
-          ..write('tipo: $tipo, ')
-          ..write('contenido: $contenido, ')
+          ..write('imagenPath: $imagenPath, ')
           ..write('fechaSubida: $fechaSubida')
           ..write(')'))
         .toString();
@@ -5593,6 +5481,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RankingsTable rankings = $RankingsTable(this);
   late final $NotificacionsTable notificacions = $NotificacionsTable(this);
   late final UsuarioDao usuarioDao = UsuarioDao(this as AppDatabase);
+  late final CuestionarioDao cuestionarioDao = CuestionarioDao(
+    this as AppDatabase,
+  );
+  late final PerfilDao perfilDao = PerfilDao(this as AppDatabase);
+  late final RetoDao retoDao = RetoDao(this as AppDatabase);
+  late final EvidenciaDao evidenciaDao = EvidenciaDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -10265,27 +10159,6 @@ final class $$RetoGlobalsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
-
-  static MultiTypedResultKey<$EvidenciasTable, List<Evidencia>>
-  _evidenciasRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.evidencias,
-    aliasName: $_aliasNameGenerator(
-      db.retoGlobals.id,
-      db.evidencias.retoGlobalId,
-    ),
-  );
-
-  $$EvidenciasTableProcessedTableManager get evidenciasRefs {
-    final manager = $$EvidenciasTableTableManager(
-      $_db,
-      $_db.evidencias,
-    ).filter((f) => f.retoGlobalId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_evidenciasRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
 }
 
 class $$RetoGlobalsTableFilterComposer
@@ -10363,31 +10236,6 @@ class $$RetoGlobalsTableFilterComposer
                     $removeJoinBuilderFromRootComposer,
               ),
         );
-    return f(composer);
-  }
-
-  Expression<bool> evidenciasRefs(
-    Expression<bool> Function($$EvidenciasTableFilterComposer f) f,
-  ) {
-    final $$EvidenciasTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.evidencias,
-      getReferencedColumn: (t) => t.retoGlobalId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$EvidenciasTableFilterComposer(
-            $db: $db,
-            $table: $db.evidencias,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
     return f(composer);
   }
 }
@@ -10518,31 +10366,6 @@ class $$RetoGlobalsTableAnnotationComposer
         );
     return f(composer);
   }
-
-  Expression<T> evidenciasRefs<T extends Object>(
-    Expression<T> Function($$EvidenciasTableAnnotationComposer a) f,
-  ) {
-    final $$EvidenciasTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.evidencias,
-      getReferencedColumn: (t) => t.retoGlobalId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$EvidenciasTableAnnotationComposer(
-            $db: $db,
-            $table: $db.evidencias,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$RetoGlobalsTableTableManager
@@ -10561,7 +10384,6 @@ class $$RetoGlobalsTableTableManager
           PrefetchHooks Function({
             bool creadorId,
             bool validacionRetoGlobalsRefs,
-            bool evidenciasRefs,
           })
         > {
   $$RetoGlobalsTableTableManager(_$AppDatabase db, $RetoGlobalsTable table)
@@ -10612,16 +10434,11 @@ class $$RetoGlobalsTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({
-                creadorId = false,
-                validacionRetoGlobalsRefs = false,
-                evidenciasRefs = false,
-              }) {
+              ({creadorId = false, validacionRetoGlobalsRefs = false}) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (validacionRetoGlobalsRefs) db.validacionRetoGlobals,
-                    if (evidenciasRefs) db.evidencias,
                   ],
                   addJoins:
                       <
@@ -10680,27 +10497,6 @@ class $$RetoGlobalsTableTableManager
                               ),
                           typedResults: items,
                         ),
-                      if (evidenciasRefs)
-                        await $_getPrefetchedData<
-                          RetoGlobal,
-                          $RetoGlobalsTable,
-                          Evidencia
-                        >(
-                          currentTable: table,
-                          referencedTable: $$RetoGlobalsTableReferences
-                              ._evidenciasRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$RetoGlobalsTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).evidenciasRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.retoGlobalId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
                     ];
                   },
                 );
@@ -10721,11 +10517,7 @@ typedef $$RetoGlobalsTableProcessedTableManager =
       $$RetoGlobalsTableUpdateCompanionBuilder,
       (RetoGlobal, $$RetoGlobalsTableReferences),
       RetoGlobal,
-      PrefetchHooks Function({
-        bool creadorId,
-        bool validacionRetoGlobalsRefs,
-        bool evidenciasRefs,
-      })
+      PrefetchHooks Function({bool creadorId, bool validacionRetoGlobalsRefs})
     >;
 typedef $$ValidacionRetoGlobalsTableCreateCompanionBuilder =
     ValidacionRetoGlobalsCompanion Function({
@@ -11164,20 +10956,16 @@ typedef $$EvidenciasTableCreateCompanionBuilder =
     EvidenciasCompanion Function({
       Value<int> id,
       required int usuarioId,
-      Value<int?> retoDiarioId,
-      Value<int?> retoGlobalId,
-      required String tipo,
-      Value<String?> contenido,
+      required int retoDiarioId,
+      required String imagenPath,
       Value<DateTime> fechaSubida,
     });
 typedef $$EvidenciasTableUpdateCompanionBuilder =
     EvidenciasCompanion Function({
       Value<int> id,
       Value<int> usuarioId,
-      Value<int?> retoDiarioId,
-      Value<int?> retoGlobalId,
-      Value<String> tipo,
-      Value<String?> contenido,
+      Value<int> retoDiarioId,
+      Value<String> imagenPath,
       Value<DateTime> fechaSubida,
     });
 
@@ -11209,33 +10997,14 @@ final class $$EvidenciasTableReferences
         $_aliasNameGenerator(db.evidencias.retoDiarioId, db.retoDiarios.id),
       );
 
-  $$RetoDiariosTableProcessedTableManager? get retoDiarioId {
-    final $_column = $_itemColumn<int>('reto_diario_id');
-    if ($_column == null) return null;
+  $$RetoDiariosTableProcessedTableManager get retoDiarioId {
+    final $_column = $_itemColumn<int>('reto_diario_id')!;
+
     final manager = $$RetoDiariosTableTableManager(
       $_db,
       $_db.retoDiarios,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_retoDiarioIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $RetoGlobalsTable _retoGlobalIdTable(_$AppDatabase db) =>
-      db.retoGlobals.createAlias(
-        $_aliasNameGenerator(db.evidencias.retoGlobalId, db.retoGlobals.id),
-      );
-
-  $$RetoGlobalsTableProcessedTableManager? get retoGlobalId {
-    final $_column = $_itemColumn<int>('reto_global_id');
-    if ($_column == null) return null;
-    final manager = $$RetoGlobalsTableTableManager(
-      $_db,
-      $_db.retoGlobals,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_retoGlobalIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -11257,13 +11026,8 @@ class $$EvidenciasTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get tipo => $composableBuilder(
-    column: $table.tipo,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get contenido => $composableBuilder(
-    column: $table.contenido,
+  ColumnFilters<String> get imagenPath => $composableBuilder(
+    column: $table.imagenPath,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -11317,29 +11081,6 @@ class $$EvidenciasTableFilterComposer
     );
     return composer;
   }
-
-  $$RetoGlobalsTableFilterComposer get retoGlobalId {
-    final $$RetoGlobalsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.retoGlobalId,
-      referencedTable: $db.retoGlobals,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$RetoGlobalsTableFilterComposer(
-            $db: $db,
-            $table: $db.retoGlobals,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$EvidenciasTableOrderingComposer
@@ -11356,13 +11097,8 @@ class $$EvidenciasTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get tipo => $composableBuilder(
-    column: $table.tipo,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get contenido => $composableBuilder(
-    column: $table.contenido,
+  ColumnOrderings<String> get imagenPath => $composableBuilder(
+    column: $table.imagenPath,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -11416,29 +11152,6 @@ class $$EvidenciasTableOrderingComposer
     );
     return composer;
   }
-
-  $$RetoGlobalsTableOrderingComposer get retoGlobalId {
-    final $$RetoGlobalsTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.retoGlobalId,
-      referencedTable: $db.retoGlobals,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$RetoGlobalsTableOrderingComposer(
-            $db: $db,
-            $table: $db.retoGlobals,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$EvidenciasTableAnnotationComposer
@@ -11453,11 +11166,10 @@ class $$EvidenciasTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get tipo =>
-      $composableBuilder(column: $table.tipo, builder: (column) => column);
-
-  GeneratedColumn<String> get contenido =>
-      $composableBuilder(column: $table.contenido, builder: (column) => column);
+  GeneratedColumn<String> get imagenPath => $composableBuilder(
+    column: $table.imagenPath,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get fechaSubida => $composableBuilder(
     column: $table.fechaSubida,
@@ -11509,29 +11221,6 @@ class $$EvidenciasTableAnnotationComposer
     );
     return composer;
   }
-
-  $$RetoGlobalsTableAnnotationComposer get retoGlobalId {
-    final $$RetoGlobalsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.retoGlobalId,
-      referencedTable: $db.retoGlobals,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$RetoGlobalsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.retoGlobals,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$EvidenciasTableTableManager
@@ -11547,11 +11236,7 @@ class $$EvidenciasTableTableManager
           $$EvidenciasTableUpdateCompanionBuilder,
           (Evidencia, $$EvidenciasTableReferences),
           Evidencia,
-          PrefetchHooks Function({
-            bool usuarioId,
-            bool retoDiarioId,
-            bool retoGlobalId,
-          })
+          PrefetchHooks Function({bool usuarioId, bool retoDiarioId})
         > {
   $$EvidenciasTableTableManager(_$AppDatabase db, $EvidenciasTable table)
     : super(
@@ -11568,36 +11253,28 @@ class $$EvidenciasTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<int> usuarioId = const Value.absent(),
-                Value<int?> retoDiarioId = const Value.absent(),
-                Value<int?> retoGlobalId = const Value.absent(),
-                Value<String> tipo = const Value.absent(),
-                Value<String?> contenido = const Value.absent(),
+                Value<int> retoDiarioId = const Value.absent(),
+                Value<String> imagenPath = const Value.absent(),
                 Value<DateTime> fechaSubida = const Value.absent(),
               }) => EvidenciasCompanion(
                 id: id,
                 usuarioId: usuarioId,
                 retoDiarioId: retoDiarioId,
-                retoGlobalId: retoGlobalId,
-                tipo: tipo,
-                contenido: contenido,
+                imagenPath: imagenPath,
                 fechaSubida: fechaSubida,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required int usuarioId,
-                Value<int?> retoDiarioId = const Value.absent(),
-                Value<int?> retoGlobalId = const Value.absent(),
-                required String tipo,
-                Value<String?> contenido = const Value.absent(),
+                required int retoDiarioId,
+                required String imagenPath,
                 Value<DateTime> fechaSubida = const Value.absent(),
               }) => EvidenciasCompanion.insert(
                 id: id,
                 usuarioId: usuarioId,
                 retoDiarioId: retoDiarioId,
-                retoGlobalId: retoGlobalId,
-                tipo: tipo,
-                contenido: contenido,
+                imagenPath: imagenPath,
                 fechaSubida: fechaSubida,
               ),
           withReferenceMapper: (p0) => p0
@@ -11608,81 +11285,60 @@ class $$EvidenciasTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback:
-              ({
-                usuarioId = false,
-                retoDiarioId = false,
-                retoGlobalId = false,
-              }) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [],
-                  addJoins:
-                      <
-                        T extends TableManagerState<
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic
-                        >
-                      >(state) {
-                        if (usuarioId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.usuarioId,
-                                    referencedTable: $$EvidenciasTableReferences
-                                        ._usuarioIdTable(db),
-                                    referencedColumn:
-                                        $$EvidenciasTableReferences
-                                            ._usuarioIdTable(db)
-                                            .id,
-                                  )
-                                  as T;
-                        }
-                        if (retoDiarioId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.retoDiarioId,
-                                    referencedTable: $$EvidenciasTableReferences
-                                        ._retoDiarioIdTable(db),
-                                    referencedColumn:
-                                        $$EvidenciasTableReferences
-                                            ._retoDiarioIdTable(db)
-                                            .id,
-                                  )
-                                  as T;
-                        }
-                        if (retoGlobalId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.retoGlobalId,
-                                    referencedTable: $$EvidenciasTableReferences
-                                        ._retoGlobalIdTable(db),
-                                    referencedColumn:
-                                        $$EvidenciasTableReferences
-                                            ._retoGlobalIdTable(db)
-                                            .id,
-                                  )
-                                  as T;
-                        }
+          prefetchHooksCallback: ({usuarioId = false, retoDiarioId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (usuarioId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.usuarioId,
+                                referencedTable: $$EvidenciasTableReferences
+                                    ._usuarioIdTable(db),
+                                referencedColumn: $$EvidenciasTableReferences
+                                    ._usuarioIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+                    if (retoDiarioId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.retoDiarioId,
+                                referencedTable: $$EvidenciasTableReferences
+                                    ._retoDiarioIdTable(db),
+                                referencedColumn: $$EvidenciasTableReferences
+                                    ._retoDiarioIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
 
-                        return state;
-                      },
-                  getPrefetchedDataCallback: (items) async {
-                    return [];
+                    return state;
                   },
-                );
+              getPrefetchedDataCallback: (items) async {
+                return [];
               },
+            );
+          },
         ),
       );
 }
@@ -11699,11 +11355,7 @@ typedef $$EvidenciasTableProcessedTableManager =
       $$EvidenciasTableUpdateCompanionBuilder,
       (Evidencia, $$EvidenciasTableReferences),
       Evidencia,
-      PrefetchHooks Function({
-        bool usuarioId,
-        bool retoDiarioId,
-        bool retoGlobalId,
-      })
+      PrefetchHooks Function({bool usuarioId, bool retoDiarioId})
     >;
 typedef $$PuntuacionsTableCreateCompanionBuilder =
     PuntuacionsCompanion Function({
