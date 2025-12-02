@@ -69,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Image.asset('assets/user_logo.png', width: 26),
             onPressed: () {
+              // OPTION A: Go to Edit Profile (Old behavior)
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -88,6 +89,29 @@ class _HomeScreenState extends State<HomeScreen> {
             : Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // --- NEW BUTTON: View Stats/Profile ---
+            ElevatedButton.icon(
+              icon: const Icon(Icons.bar_chart),
+              label: const Text("Ver Mi Progreso"),
+              onPressed: () {
+                // Get DB instance from your existing Provider
+                final db = DatabaseProvider.db;
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => PerfilStatsScreen(
+                      usuario: usuarioLogueado,
+                      usuarioDao: usuarioDao,
+                      statsDao: StatsDao(db), // Inject StatsDao
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+
+            // Existing Buttons
             ElevatedButton(
               onPressed: () {
                 Navigator.push(

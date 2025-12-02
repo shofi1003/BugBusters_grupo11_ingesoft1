@@ -25,6 +25,7 @@ import 'daos/perfil_dao.dart';
   import 'tables/ranking.dart';
   import 'tables/notificacion.dart';
   import 'daos/usuario_dao.dart';
+  import 'daos/stats_dao.dart';
 
   part 'database.g.dart';
 
